@@ -6,7 +6,7 @@ const prefix = "!";                         // Every command starts with "!"
 require('dotenv').config()                  // To use .env files
 
 
-/* 
+/*
     Client object that connects to the API itself
     to run the bot
 */
@@ -34,14 +34,12 @@ client.on('ready', () => {
 
 		// Filters all the channels available for voice type channnels
 		const voiceChannelCount = client.channels.cache.filter(c => c.type ==='voice');
-        
+
 
         for (let [key, value] of voiceChannelCount) {
 
 			// This is how you get a channel by name.
 			const vchannel_holder = client.channels.cache.find(channel => channel.name === value["name"]);
-			//console.log(vchannel_holder.members); // This is a Map, key is userID, value is GuildMember. Inside GuildMember is user
-
 
 			console.log(`-------=| Inspected users currently in ${value["name"]} |=------`);
 
@@ -55,27 +53,13 @@ client.on('ready', () => {
 				// console.log(error);
 
 			}
-		
+
         }
 
-
-		// This is how you grab a channel by ID.
-		// Leave this for now, might need it for reference.
-		//const chan_stratton = client.channels.cache.get("841115556500602900"); 
-	}, 3000);
-	
-
+	}, 5000); // Milliseconds
 
 });
 
-
-
-
-//------------=| Gathering Channel Data |=--------------------//
-
-// 	console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
-
-//------------------------------------------------------------//
 
 
 // Gathering the commands from the files in "commands" directory.
@@ -110,38 +94,47 @@ client.on('message', message => {
 });
 
 
-//-------------=| On joining a voice channel |=----------|
-// Save this for now, we might need this for reference.
-client.on('voiceStateUpdate', (oldState, newState) => {
 
 
-	try {
 
-		// Current problem, we don't care if the user is muted, deafened, etc.
-		//console.log("/*********************************/");
+//-------=| Section For Important Code Snippets |=-----------//
+
+/*
+
+
+	This is how you grab a channel by ID.
+	Leave this for now, might need it for reference.
+
+	const chan_stratton = client.channels.cache.get("841115556500602900");
+
+
+
+
+
+	For voice state updates. Useful for detecting entry to voice servers.
+	Save this for now, we might need this for reference.
+	Ref:
+		https://stackoverflow.com/questions/65961002/discord-js-check-if-user-is-in-an-specific-voice-channel
+
+
+	client.on('voiceStateUpdate', (oldState, newState) => {
+		try {
+
 		//console.log(`User ID: ${newState.member['user']['id']}`);
-		//console.log(newState.member);
 		//console.log(`Voice Channel ID: ${newState.channel['id']}`); // Confirmed!
-		//console.log("/*********************************/");
 
-	} catch (error) {
-		console.log("A user has left a channel.");
+		} catch (error) {
+			console.log("A user has left a channel.");
+
+		}
 
 	}
 
 
-	/* Objectives: 
-		List the channel ID. Done
-		List the name. 		 Done
-		List the ID.		 Done
 
-		Leave this for now, figure out how to make a five second timer
-		and detect if someone is in a voice channel (Not necessarily if their voice state changes)
+	console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
 
-		Clues here:
-		https://stackoverflow.com/questions/65961002/discord-js-check-if-user-is-in-an-specific-voice-channel
 
-	*/
-});
 
-//-------------------------------------------------------|
+
+*/
