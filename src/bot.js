@@ -22,8 +22,20 @@ client.commands = new Discord.Collection();
 client.login(process.env.BOTTOKEN);
 
 
-
+// To do, break this down to smaller functions
+// this looks sloppy.
 function log_voice_channels() {
+
+
+	var currentdate = new Date(); 
+	var today_date = currentdate.getDate() + "_"
+    			   + (currentdate.getMonth()+1)  + "_" 
+                   + currentdate.getFullYear();
+			
+
+	var today_time =  currentdate.getHours() + ":"  
+					+ currentdate.getMinutes() + ":" 
+					+ currentdate.getSeconds();
 
 
 	// We do this by first identifying which servers are voice-type
@@ -33,12 +45,17 @@ function log_voice_channels() {
 	const voiceChannelCount = client.channels.cache.filter(c => c.type ==='voice');
 
 
+	//	Empty string, we gradually fill this with data.
+	var log_string = ""; 
+
 	for (let [key, value] of voiceChannelCount) {
 
 		// This is how you get a channel by name.
 		const vchannel_holder = client.channels.cache.find(channel => channel.name === value["name"]);
 
 		console.log(`-------=| Users currently in ${value["name"]} `);
+
+		log_string += value['name'] + '\n\n';  
 
 
  		//----------- Below this line, you must only do these if the collection isn't empty (try-catch)
@@ -53,7 +70,8 @@ function log_voice_channels() {
 				const user_name = item[1].user.username;
 				const user_id = item[1].user.id;
 				console.log('Username: ' + chalk.greenBright(user_name) + '  ID: ' + chalk.blueBright(user_id));
-		}
+				log_string += '     ' + 'Username: '+ user_name + '  ID: ' + user_id + '\n\n';  
+			}
 
 	
 		} catch (error) {
@@ -61,6 +79,22 @@ function log_voice_channels() {
 			console.log(error);
 		}
 	}
+
+
+	/*
+		appendFile will create a file if it
+		isn't already there. So we will automatically have 
+		one file per day, which is what we intended.
+	*/
+
+
+	fs.appendFile('../timelog/' + today_date +'.txt', 
+				  '-----=| ' + today_time + ' |=-----' +
+				  '\n' + log_string, 
+	function (err) {
+		if (err) throw err;
+	});
+
 }
 
 
@@ -149,11 +183,6 @@ client.on('message', message => {
 
 	}
 
-
-
 	console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
-
-
-
 
 */
