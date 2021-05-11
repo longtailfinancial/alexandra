@@ -2,7 +2,7 @@
 
 
 # Define a filename.
-filename = "timelog/foo.txt"
+filename = "../timelog/foo.txt"
 
 
 # Open the file as f.
