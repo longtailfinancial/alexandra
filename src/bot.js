@@ -27,13 +27,13 @@ client.login(process.env.BOTTOKEN);
 function log_voice_channels() {
 
 
-	var currentdate = new Date(); 
-	var today_date = currentdate.getDate() + "_"
+	let currentdate = new Date(); 
+	let today_date = currentdate.getDate() + "_"
     			   + (currentdate.getMonth()+1)  + "_" 
                    + currentdate.getFullYear();
 			
 
-	var today_time =  currentdate.getHours() + ":"  
+	let today_time =  currentdate.getHours() + ":"  
 					+ currentdate.getMinutes() + ":" 
 					+ currentdate.getSeconds();
 
@@ -46,7 +46,7 @@ function log_voice_channels() {
 
 
 	//	Empty string, we gradually fill this with data.
-	var log_string = ""; 
+	let log_string = ""; 
 
 	for (let [key, value] of voiceChannelCount) {
 
