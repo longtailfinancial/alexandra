@@ -22,24 +22,54 @@ client.commands = new Discord.Collection();
 client.login(process.env.BOTTOKEN);
 
 
-// To do, break this down to smaller functions
-// this looks sloppy.
-function log_voice_channels() {
 
 
+
+
+function get_date_time () {
+	
 	let currentdate = new Date(); 
-	let today_date = currentdate.getDate() + "_"
+	let todays_date = currentdate.getDate() + "_"
     			   + (currentdate.getMonth()+1)  + "_" 
                    + currentdate.getFullYear();
 			
 
-	let today_time =  currentdate.getHours() + ":"  
+	let todays_time =  currentdate.getHours() + ":"  
 					+ currentdate.getMinutes() + ":" 
 					+ currentdate.getSeconds();
+	
+	return [todays_date, todays_time];
 
+}
+
+
+function file_write_log(received_log_string) {
+	/*
+		appendFile will create a file if it
+		isn't already there. So we will automatically have 
+		one file per day, which is what we intended.
+	*/
+	let date_info = get_date_time();
+	let today_date = date_info[0],
+		today_time = date_info[1];
+
+	fs.appendFile('../timelog/' + today_date +'.txt', 
+				  '-----=| ' + today_time + ' |=-----' +
+				  '\n' + received_log_string, 
+	function (err) {
+		if (err) throw err;
+	});
+
+}
+
+
+// To do, break this down to smaller functions
+// this looks sloppy.
+function log_voice_channels() {
 
 	// We do this by first identifying which servers are voice-type
 	// Then listing the current users in each of them.
+
 
 	// Filters all the channels available for voice type channnels
 	const voiceChannelCount = client.channels.cache.filter(c => c.type ==='voice');
@@ -81,19 +111,10 @@ function log_voice_channels() {
 	}
 
 
-	/*
-		appendFile will create a file if it
-		isn't already there. So we will automatically have 
-		one file per day, which is what we intended.
-	*/
+
+	file_write_log(log_string);
 
 
-	fs.appendFile('../timelog/' + today_date +'.txt', 
-				  '-----=| ' + today_time + ' |=-----' +
-				  '\n' + log_string, 
-	function (err) {
-		if (err) throw err;
-	});
 
 }
 
