@@ -24,8 +24,6 @@ client.login(process.env.BOTTOKEN);
 
 
 
-
-
 function get_date_time () {
 	
 	let currentdate = new Date(); 
@@ -44,6 +42,44 @@ function get_date_time () {
 
 
 function file_write_log(received_log_string) {
+
+	/*
+		JSON conversion plan:
+			First, check if today_date.json exists in ../timelog
+				if not, create it with the initial encapsulating object with date as first key and value.
+				then, put log as key and an empty JSONArray as its value
+
+		----------------------- Before proceeding, see if you can do all above-----------
+
+		Each timelog is an object - Key is a string timestep, value is a 
+		JSONArray[nameless array] of voice channel objects.
+
+		A voice_channel_object is an object where the key is the voice channel name and the 
+		value is a user object (containing user-id pairs). !This is made just outside the try-catch block 
+		in log_voice_channels!
+
+		So for each found voice channel, create an object key is channel name, 
+		value is initallly an empty string !This is made inside the try block!
+			So, first put name and userid together in an object ( key-pair )
+
+
+
+		----------------------- Technical -----------------------------------------------
+
+			/* -------- Create an nameless JSON ARRAY Using this example -----------
+			JSONArray array = new JSONArray();
+    
+			JSONObject obj1 = new JSONObject();
+			obj1.put("key", "value");
+			array.put(obj1);
+				
+			JSONObject obj2 = new JSONObject();
+			obj2.put("key2", "value2");
+			array.put(obj2);
+
+	*/
+
+
 	/*
 		appendFile will create a file if it
 		isn't already there. So we will automatically have 
@@ -87,6 +123,7 @@ function log_voice_channels() {
 
 		log_string += value['name'] + '\n\n';  
 
+		// !Create the Channel Object here (channelname as key: str / user objects as key)!
 
  		//----------- Below this line, you must only do these if the collection isn't empty (try-catch)
 		try {
@@ -96,25 +133,27 @@ function log_voice_channels() {
 			// guild_member_holder is a dictionary, so we can iterate through it.
 			const iter1 = guild_member_holder[Symbol.iterator]();
 
+			// Loops through users found in a channel
 			for (const item of iter1) {
 				const user_name = item[1].user.username;
 				const user_id = item[1].user.id;
 				console.log('Username: ' + chalk.greenBright(user_name) + '  ID: ' + chalk.blueBright(user_id));
 				log_string += '     ' + 'Username: '+ user_name + '  ID: ' + user_id + '\n\n';  
+
+				// !Create the user object (name string as key, id string as value)
+				// Also insert them to the channel object here.
 			}
 
 	
 		} catch (error) {
 			// Errors can be ignored, as empty channels are expected to have no 'user' member/property.
+
+			// If here, set the channel object's key as the channelname, but the value as an empty string.
 			console.log(error);
 		}
 	}
 
-
-
 	file_write_log(log_string);
-
-
 
 }
 
@@ -171,19 +210,13 @@ client.on('message', message => {
 
 
 
-
 //-------=| Section For Important Code Snippets |=-----------//
 
 /*
-
-
 	This is how you grab a channel by ID.
 	Leave this for now, might need it for reference.
 
 	const chan_stratton = client.channels.cache.get("841115556500602900");
-
-
-
 
 	For voice state updates. Useful for detecting entry to voice servers.
 	Save this for now, we might need this for reference.
@@ -201,9 +234,7 @@ client.on('message', message => {
 			console.log("A user has left a channel.");
 
 		}
-
 	}
-
 	console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
 
 */
