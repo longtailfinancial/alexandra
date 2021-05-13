@@ -49,14 +49,12 @@ function file_write_log(received_channel_object_array) {
 		value is a user object (containing user-id pairs). !This is made just outside the try-catch block 
 		in log_voice_channels!
 
-		So for each found voice channel, create an object. Key is channel name, 
+		So for each found voice channel, we create an object.  The key is channel name, 
 		value is initallly an empty_array !This is made inside the try block!
 			Then put name and userid together in an object ( key-pair ), then insert that into the empty array 
 			(which is the value to channel object)
 
 	*/
-
-
 
 	let date_info = get_date_time();
 	let today_date = date_info[0],
@@ -68,15 +66,11 @@ function file_write_log(received_channel_object_array) {
 
 	timestep_object[`${today_time}`] = received_channel_object_array;
 
-	
-
 	fs.access(today_file, (err) => {
 
 		if(err) {
 
-			console.log(`JSON for today's file: ${today_date}.json
-			doesn't exist. Creating...`);
-
+			console.log(`JSON for today's file: ${today_date}.json doesn't exist. Creating...`);
 
 			const day_object = {
 			
@@ -88,33 +82,56 @@ function file_write_log(received_channel_object_array) {
 
 			const initial_day_object = JSON.stringify(day_object, null, 4);
 		
-
 			// This function is what actually creates the JSON.
 			fs.appendFile(today_file, initial_day_object, (err) => {
 
-				if(err) {
-					console.error(err);
-				} else {
-
-					// initial_day_object will hold the encapsulating object
-					// Leave this scope be.
-				}
-
+				if(err)	console.error(err);
 			});
 
 		} else {
 
-			console.log(`JSON for today's file: ${today_date}.json exists`);
+			console.log(`JSON for today's file: ${today_date}.json exists. Updating..`);
 
-			// Open up the object inside file.
-			// Get the key of log (the nameless array containing timesteps)
-			// Then simply append the next timestep object to it.
-			// then close file.
+			// Reading the existing file, putting in new timestep, and overwriting.
+			fs.readFile(today_file, 'utf-8', (err, jsonString) => {
 
+				if (err) {
+					console.log(err);
+				} else {
+
+					/*
+					Because we're getting a string since we asked for it in utf-8,
+					(otherwise it would just be an unreadable buffer)
+					we can't access the properties right away. 
+					*/
+
+					// We have to parse jsonString into a JSON object.					
+					try {
+			
+						// It's best to wrap JSON.parse calls into a try-catch
+						// If it throws an error and isn't caught, it will crash your program
+						const current_day_object = JSON.parse(jsonString);
+
+						// This pushes the new timestep_objects perfectly!
+						current_day_object.log.push(timestep_object);
+
+						// Now stringify it again and overwrite today_file.
+
+						const updated_day_object = JSON.stringify(current_day_object, null, 4);
+
+						fs.writeFile(today_file, updated_day_object,  (err) => { 
+
+							if(err) console.error(err);
+						
+						});
+
+					} catch (err) {
+						console.error('Error parsing JSON', err);
+					}
+				}
+			});
 		}
-
 	});
-
 }
 
 
@@ -142,7 +159,6 @@ function log_voice_channels() {
 
 		log_string += value['name'] + '\n\n';  
 
-		
 		/*
 			Create the channel_object here
 			(vchannelname as key: str / empty JSON array as key)
@@ -162,7 +178,7 @@ function log_voice_channels() {
 
 			// Loops through users found in a channel
 			for (const item of iter1) {
-				
+
 				const user_name = item[1].user.username;
 				const user_id = item[1].user.id;
 
@@ -201,12 +217,12 @@ client.on('ready', () => {
 
     console.log("Alexandra_ initialized.");
 
-	// Every five seconds, we check the voice channels for users.
+	// Every 2.5 mins, we check the voice channels for users.
 	setInterval(() => {
 
 		log_voice_channels();
 
-	}, 5000); // Milliseconds
+	}, 90000); // 2.5 mins is 90 milliseconds
 
 });
 
@@ -222,6 +238,8 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
+// This event manages message input in the server
+// It's mainly to screen them for possible bot commands
 client.on('message', message => {
     console.log(message.content);
 
