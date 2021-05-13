@@ -5,7 +5,6 @@ require('dotenv').config()                  // To use .env files
 
 const prefix = "!";                         // Every command starts with "!"
 
-
 /*
     Client object that connects to the API itself
     to run the bot
@@ -20,8 +19,6 @@ client.commands = new Discord.Collection();
 
 
 client.login(process.env.BOTTOKEN);
-
-
 
 
 function get_date_time () {
@@ -41,15 +38,9 @@ function get_date_time () {
 }
 
 
-function file_write_log(received_log_string) {
+function file_write_log(received_channel_object_array) {
 
 	/*
-		JSON conversion plan:
-			First, check if today_date.json exists in ../timelog
-				if not, create it with the initial encapsulating object with date as first key and value.
-				then, put log as key and an empty JSONArray as its value
-
-		----------------------- Before proceeding, see if you can do all above-----------
 
 		Each timelog is an object - Key is a string timestep, value is a 
 		JSONArray[nameless array] of voice channel objects.
@@ -63,21 +54,6 @@ function file_write_log(received_log_string) {
 			Then put name and userid together in an object ( key-pair ), then insert that into the empty array 
 			(which is the value to channel object)
 
-
-
-		----------------------- Technical -----------------------------------------------
-
-			/* -------- Create an nameless JSON ARRAY Using this example -----------
-			JSONArray array = new JSONArray();
-    
-			JSONObject obj1 = new JSONObject();
-			obj1.put("key", "value");
-			array.put(obj1);
-				
-			JSONObject obj2 = new JSONObject();
-			obj2.put("key2", "value2");
-			array.put(obj2);
-
 	*/
 
 
@@ -88,11 +64,11 @@ function file_write_log(received_log_string) {
 
 	let today_file = '../timelog/'+ today_date + '.json';
 
+	let timestep_object = {};
 
-	/* 
-	You got the day here. Check if today.JSON exists in the
-	timelog folder.
-	*/
+	timestep_object[`${today_time}`] = received_channel_object_array;
+
+	
 
 	fs.access(today_file, (err) => {
 
@@ -106,13 +82,11 @@ function file_write_log(received_log_string) {
 			
 				"date": `${today_date}`,
 				"log": [
-					// White you're creating the JSON for the day, 
-					// might as well stick the timestep entry in.
+					timestep_object
 				]
 			};
 
-			const initial_day_object = JSON.stringify(day_object, null, 2);
-
+			const initial_day_object = JSON.stringify(day_object, null, 4);
 		
 
 			// This function is what actually creates the JSON.
@@ -121,9 +95,8 @@ function file_write_log(received_log_string) {
 				if(err) {
 					console.error(err);
 				} else {
-					
-					//
-					// CONTENT_PLACEHOLD will hold the encapsulating object
+
+					// initial_day_object will hold the encapsulating object
 					// Leave this scope be.
 				}
 
@@ -132,19 +105,14 @@ function file_write_log(received_log_string) {
 		} else {
 
 			console.log(`JSON for today's file: ${today_date}.json exists`);
-			
+
+			// Open up the object inside file.
+			// Get the key of log (the nameless array containing timesteps)
+			// Then simply append the next timestep object to it.
+			// then close file.
+
 		}
 
-	});
-
-
-	//--------- Old Logging System Code --------- //
-
-	fs.appendFile('../timelog/' + today_date +'.txt', 
-				  '-----=| ' + today_time + ' |=-----' +
-				  '\n' + received_log_string, 
-	function (err) {
-		if (err) throw err;
 	});
 
 }
@@ -155,15 +123,16 @@ function log_voice_channels() {
 	// We do this by first identifying which servers are voice-type
 	// Then listing the current users in each of them.
 
-
 	// Filters all the channels available for voice type channnels
 	const voiceChannelCount = client.channels.cache.filter(c => c.type ==='voice');
 
-
 	//	Empty string, we gradually fill this with data.
 	let log_string = ""; 
-	// You also need to create the empty JSON array (contains individ channel objects) here along with the log_string
 
+	// You also need to create the empty JSON array (contains individ channel objects) here along with the log_string
+	channel_object_array = [];
+
+	// For each voice channel
 	for (let [key, value] of voiceChannelCount) {
 
 		// This is how you get a channel by name.
@@ -173,9 +142,17 @@ function log_voice_channels() {
 
 		log_string += value['name'] + '\n\n';  
 
-		// !Create the Channel Object here (vchannelname as key: str / empty JSON array as key. The key is filled one by one in try block below)!
+		
+		/*
+			Create the channel_object here
+			(vchannelname as key: str / empty JSON array as key)
+			The key is filled one by one in try block below
+		*/
+		let channel_object = {};
+		let user_container_array = [];
 
- 		//----------- Below this line, you must only do these if the collection isn't empty (try-catch)
+
+ 		// Below this line, you must only do these if the collection isn't empty (try-catch)
 		try {
 
 			const guild_member_holder = vchannel_holder.members;
@@ -185,32 +162,44 @@ function log_voice_channels() {
 
 			// Loops through users found in a channel
 			for (const item of iter1) {
+				
 				const user_name = item[1].user.username;
 				const user_id = item[1].user.id;
+
 				console.log('Username: ' + chalk.greenBright(user_name) + '  ID: ' + chalk.blueBright(user_id));
 				log_string += '     ' + 'Username: '+ user_name + '  ID: ' + user_id + '\n\n';  
 
-				// !Create the user object (name string as key, id string as value)
-				// Also insert them to the channel object here.
+				// user object is created, with name as key and id as value.
+				let user_object = {};
+				user_object[user_name] = user_id;
+
+				// user object is then inserted to user_container_array
+				user_container_array.push(user_object);
+
 			}
 	
 		} catch (error) {
-			// Errors can be ignored, as empty channels are expected to have no 'user' member/property.
 
+			// Errors can be ignored, as empty channels are expected to have no 'user' member/property.
 			console.log(error);
 		}
+
+
+	// The voice channel object is created, and the key is the channel name
+	// and the value is the nameless array containing the individual user objects.
+	channel_object[`${value['name']}`] = user_container_array;
+	channel_object_array.push(channel_object);
+
 	}
 
-	file_write_log(log_string);
+	file_write_log(channel_object_array);
 }
-
-
 
 
 // Whenever the bot is activated.
 client.on('ready', () => {
-    console.log("Alexandra_ initialized.");
 
+    console.log("Alexandra_ initialized.");
 
 	// Every five seconds, we check the voice channels for users.
 	setInterval(() => {
