@@ -58,9 +58,10 @@ function file_write_log(received_log_string) {
 		value is a user object (containing user-id pairs). !This is made just outside the try-catch block 
 		in log_voice_channels!
 
-		So for each found voice channel, create an object key is channel name, 
-		value is initallly an empty string !This is made inside the try block!
-			So, first put name and userid together in an object ( key-pair )
+		So for each found voice channel, create an object. Key is channel name, 
+		value is initallly an empty_array !This is made inside the try block!
+			Then put name and userid together in an object ( key-pair ), then insert that into the empty array 
+			(which is the value to channel object)
 
 
 
@@ -80,14 +81,64 @@ function file_write_log(received_log_string) {
 	*/
 
 
-	/*
-		appendFile will create a file if it
-		isn't already there. So we will automatically have 
-		one file per day, which is what we intended.
-	*/
+
 	let date_info = get_date_time();
 	let today_date = date_info[0],
 		today_time = date_info[1];
+
+	let today_file = '../timelog/'+ today_date + '.json';
+
+
+	/* 
+	You got the day here. Check if today.JSON exists in the
+	timelog folder.
+	*/
+
+	fs.access(today_file, (err) => {
+
+		if(err) {
+
+			console.log(`JSON for today's file: ${today_date}.json
+			doesn't exist. Creating...`);
+
+
+			const day_object = {
+			
+				"date": `${today_date}`,
+				"log": [
+					// White you're creating the JSON for the day, 
+					// might as well stick the timestep entry in.
+				]
+			};
+
+			const initial_day_object = JSON.stringify(day_object, null, 2);
+
+		
+
+			// This function is what actually creates the JSON.
+			fs.appendFile(today_file, initial_day_object, (err) => {
+
+				if(err) {
+					console.error(err);
+				} else {
+					
+					//
+					// CONTENT_PLACEHOLD will hold the encapsulating object
+					// Leave this scope be.
+				}
+
+			});
+
+		} else {
+
+			console.log(`JSON for today's file: ${today_date}.json exists`);
+			
+		}
+
+	});
+
+
+	//--------- Old Logging System Code --------- //
 
 	fs.appendFile('../timelog/' + today_date +'.txt', 
 				  '-----=| ' + today_time + ' |=-----' +
@@ -99,8 +150,6 @@ function file_write_log(received_log_string) {
 }
 
 
-// To do, break this down to smaller functions
-// this looks sloppy.
 function log_voice_channels() {
 
 	// We do this by first identifying which servers are voice-type
@@ -113,6 +162,7 @@ function log_voice_channels() {
 
 	//	Empty string, we gradually fill this with data.
 	let log_string = ""; 
+	// You also need to create the empty JSON array (contains individ channel objects) here along with the log_string
 
 	for (let [key, value] of voiceChannelCount) {
 
@@ -123,7 +173,7 @@ function log_voice_channels() {
 
 		log_string += value['name'] + '\n\n';  
 
-		// !Create the Channel Object here (channelname as key: str / user objects as key)!
+		// !Create the Channel Object here (vchannelname as key: str / empty JSON array as key. The key is filled one by one in try block below)!
 
  		//----------- Below this line, you must only do these if the collection isn't empty (try-catch)
 		try {
@@ -143,18 +193,15 @@ function log_voice_channels() {
 				// !Create the user object (name string as key, id string as value)
 				// Also insert them to the channel object here.
 			}
-
 	
 		} catch (error) {
 			// Errors can be ignored, as empty channels are expected to have no 'user' member/property.
 
-			// If here, set the channel object's key as the channelname, but the value as an empty string.
 			console.log(error);
 		}
 	}
 
 	file_write_log(log_string);
-
 }
 
 
@@ -237,4 +284,8 @@ client.on('message', message => {
 	}
 	console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
 
+
+	// Why is nobody doing it this, way? It's better!
+	// This is proper stderr logging.
+	console.error(err); 
 */
