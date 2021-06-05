@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "json2csv": "^5.0.6",
     "python-shell": "^3.0.0",
-    "stream-transform": "^2.1.0"
+    "stream-transform": "^2.1.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }

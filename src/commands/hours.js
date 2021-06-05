@@ -131,7 +131,7 @@ async function rg_callback(error, stdout, stderr, message, channel_name) {
 				only then should it be mentioned
 			*/
 			let file_name = path.parse(item).base.replace('.csv', '').replace(/_/g, '-');
-			line_aggregate.push(`Date: ${file_name}, Entries: ${counts} Hours: ${hours}`);
+			line_aggregate.push(`Date: ${file_name}, Entries: ${counts} Hours: ${hours}\n`);
 
 		}
 
@@ -140,7 +140,7 @@ async function rg_callback(error, stdout, stderr, message, channel_name) {
 	console.log("Loop finished");
 
 	if(line_aggregate.length != 0) {
-		message.reply(line_aggregate.sort());
+		message.reply(`\n${line_aggregate.sort()}`);
 	} else {
 		message.reply("No results.");
 	}
