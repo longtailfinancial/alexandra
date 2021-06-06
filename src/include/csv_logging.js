@@ -4,7 +4,7 @@ const chalk = require('chalk');				// For colored output
 const fs = require('fs');                   // File system module
 
 
-function get_date_time () {
+function get_date_time() {
 
 	let currentdate = new Date();
 	let todays_date = currentdate.getDate() + "_"
