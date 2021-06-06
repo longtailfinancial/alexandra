@@ -1,6 +1,6 @@
 const Discord = require('discord.js');      // Import module
 const fs = require('fs');                   // File system module
-const user_log = require('./include/csv_logging.js');
+const userLog = require('./include/csv_logging.js');
 require('dotenv').config()                  // To use .env files
 
 
@@ -28,7 +28,7 @@ client.on('ready', () => {
 
 	setInterval(() => {
 
-		user_log.log_voice_channels(client.channels);
+		userLog.logVoiceChannels(client.channels);
 
 	}, 60000); // 60 seconds
 

@@ -1,5 +1,4 @@
-const { exec, execSync } = require("child_process");
-const fs = require('fs')
+const { exec } = require("child_process");
 const path = require('path');
 const util = require('util');
 
@@ -35,13 +34,13 @@ const util = require('util');
 const execa = util.promisify(require('child_process').exec);
 
 
-async function grepper(userid, item, channel_name) {
+async function grepper(userid, item, channelName) {
 
 	try {
 
 		/*
 			We will grep the file (item) for the user's id.
-			Once we have the lines, we further filter it for the channel_name that we're looking for.
+			Once we have the lines, we further filter it for the channelName that we're looking for.
 			Finally, we count the lines with "wc -l"
 
 			Notice the dollar sign at the end of the grep pattern in the first pipe? 
@@ -54,7 +53,7 @@ async function grepper(userid, item, channel_name) {
 			regex shit.
 
 		*/
-		const { stdout, stderr } = await execa(`grep ${userid} ${item} | grep ',${channel_name}' | wc -l`);
+		const { stdout, stderr } = await execa(`grep ${userid} ${item} | grep ',${channelName}' | wc -l`);
 		return stdout;
 
 	} catch(stderr) {
@@ -66,8 +65,8 @@ async function grepper(userid, item, channel_name) {
 
 }
 
-
-async function rg_callback(error, stdout, stderr, message, channel_name) {
+// Ripgrep callback
+async function rgCallback(error, stdout, stderr, message, channelName) {
 
 	// Consider this just boilerplate for the error and stderr.
 	if (error) {
@@ -80,26 +79,26 @@ async function rg_callback(error, stdout, stderr, message, channel_name) {
 	}
 
 	// The collected log files are one string that must be split by newline.
-	let individ_logs = stdout.split(/\r?\n/);
+	let individLogs = stdout.split(/\r?\n/);
 
 
 	// The split for some reason leaves an empty string as the last element.
-	individ_logs.pop();
+	individLogs.pop();
 	// This string will collect the lines produced by the for-loop below.
-	let line_aggregate = [];
+	let lineAggregate = [];
 
 	// This for-loop in English "For each file that had that specific user's ID."
 
-	console.log(individ_logs);
+	console.log(individLogs);
 	// We have a working loop that waits to finish now. Repurpose concat so that it runs the greps.
-	for (let item of individ_logs) {
+	for (let item of individLogs) {
 
 		/* 
-			We have to grep each line containing that user's id AND channel_name.
+			We have to grep each line containing that user's id AND channelName.
 			then count them with wc -l
 		*/
 	
-		let counts = await grepper(message.member['user']['id'], item, channel_name);
+		let counts = await grepper(message.member['user']['id'], item, channelName);
 		let hours = 0;
 
 		/*
@@ -131,7 +130,7 @@ async function rg_callback(error, stdout, stderr, message, channel_name) {
 				only then should it be mentioned
 			*/
 			let file_name = path.parse(item).base.replace('.csv', '').replace(/_/g, '-');
-			line_aggregate.push(`Date: ${file_name}, Entries: ${counts} Hours: ${hours}\n`);
+			lineAggregate.push(`Date: ${file_name}, Entries: ${counts} Hours: ${hours}\n`);
 
 		}
 
@@ -139,8 +138,8 @@ async function rg_callback(error, stdout, stderr, message, channel_name) {
 
 	console.log("Loop finished");
 
-	if(line_aggregate.length != 0) {
-		message.reply(`\n${line_aggregate.sort()}`);
+	if(lineAggregate.length != 0) {
+		message.reply(`\n${lineAggregate.sort()}`);
 	} else {
 		message.reply("No results.");
 	}
@@ -159,7 +158,7 @@ module.exports = {
 	
 		if(!args.length) {
 			message.reply("Sorry, you forgot to add a channel name.");
-			message.reply("Format: !myvch [channel_name].");
+			message.reply("Format: !myvch [channel name].");
 			return 0;
 		} else if (args.length > 1) {
 			
@@ -172,12 +171,12 @@ module.exports = {
 
 			// First bot replies to the user, saying what their ID is.
 			// This is to show the bot acknowledges the command and is actively responding.
-			let reply_back = 'Your ID is: ' + message.member['user']['id'] + ", scanning logs...";
+			let replyBack = 'Your ID is: ' + message.member['user']['id'] + ", scanning logs...";
 			
-			message.reply(reply_back);
+			message.reply(replyBack);
 			
 			// Tailoring a lengthy, but very precise and powerful bash command.
-			const shell_command = `rg -i ${message.member['user']['id']} -l ../timelog/ | grep ".*\.csv$"`;
+			const shellCommand = `rg -i ${message.member['user']['id']} -l ../timelog/ | grep ".*\.csv$"`;
 
 			/* 
 				Explanation: First use ripgrep (rg) to recursively search '../timelog/'
@@ -185,9 +184,9 @@ module.exports = {
 				then lists the files that end in csv using grep.
 			*/
 
-			exec(shell_command, (error, stdout, stderr) => {
+			exec(shellCommand, (error, stdout, stderr) => {
 				// Made a wrapper for this anonymous function so we can pass this scope's message variable.
-				rg_callback(error, stdout, stderr, message, args[0]);
+				rgCallback(error, stdout, stderr, message, args[0]);
 			});
 
 		} catch (error) {

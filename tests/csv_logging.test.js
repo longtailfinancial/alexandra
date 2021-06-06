@@ -13,6 +13,6 @@ test('Date-Time function test', () => {
 
   ];
 
-  expect(csvl.get_date_time()).toEqual(expect.arrayContaining(expected));
+  expect(csvl.getDateTime()).toEqual(expect.arrayContaining(expected));
 
 });
