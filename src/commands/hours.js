@@ -81,9 +81,10 @@ async function rgCallback(error, stdout, stderr, message, channelName) {
 	// The collected log files are one string that must be split by newline.
 	let individLogs = stdout.split(/\r?\n/);
 
-
-	// The split for some reason leaves an empty string as the last element.
+	// The split leaves an empty string as the last element.
 	individLogs.pop();
+
+	
 	// This string will collect the lines produced by the for-loop below.
 	let lineAggregate = [];
 

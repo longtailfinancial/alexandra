@@ -11,7 +11,6 @@ function getDateTime() {
     			   + (currentDate.getMonth()+1)  + "_"
                    + currentDate.getFullYear();
 
-
 	let todaysTime =  currentDate.getHours() + ":"
 					+ currentDate.getMinutes() + ":"
 					+ currentDate.getSeconds();
@@ -90,7 +89,7 @@ function logVoiceChannels(clientChannelsObj) {
 	let todayTime = dateInfo[1];
 
 	// For each voice channel
-	for (let [key, value] of voiceChannelCount) {
+	for (const [key, value] of voiceChannelCount) {
 
 		// This is how you get a channel by name.
 		const vchannelHolder = clientChannelsObj.cache.find(channel => channel.name === value["name"]);
