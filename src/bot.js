@@ -1,6 +1,6 @@
 const Discord = require('discord.js');      // Import module
 const fs = require('fs');                   // File system module
-const user_log = require('./include/csv_logging.js');
+const userLog = require('./include/json_logging.js');
 require('dotenv').config()                  // To use .env files
 
 
@@ -28,7 +28,7 @@ client.on('ready', () => {
 
 	setInterval(() => {
 
-		user_log.log_voice_channels(client.channels);
+		userLog.logVoiceChannels(client.channels);
 
 	}, 60000); // 60 seconds
 
@@ -52,7 +52,6 @@ client.on('message', message => {
     console.log(message.content);
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
