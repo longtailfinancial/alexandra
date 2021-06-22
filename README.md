@@ -1,7 +1,12 @@
-# Alexandra
+<div align="center">
+<h1>
+  Alexandra
 
+</h1>
+</div>
 
 ![](https://github.com/JohannSuarez/alexandra/actions/workflows/node.js.yml/badge.svg) 
+
 
 A package for bots to track user presence in Discord voice channels, named after our own bot who was made for this purpose. 
 
