@@ -4,7 +4,7 @@ module.exports = {
 	execute(message, args) {
 
         const {PythonShell} = require('python-shell');
-        let pyshell = new PythonShell('./pycode/readfile.py');
+        let pyshell = new PythonShell('./src/pycode/readfile.py');
 
 
         pyshell.on('message', function (msg_content) {

@@ -36,7 +36,7 @@ function fileWriteLog(receivedChannelObjectArray) {
 	let todayDate = dateInfo[0],
 		todayTime = dateInfo[1];
 
-	let todayFile = '../timelog/'+ todayDate + '.json';
+	let todayFile = 'timelog/'+ todayDate + '.json';
 
 	let timestepObject = {};
 

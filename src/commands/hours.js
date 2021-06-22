@@ -177,7 +177,7 @@ module.exports = {
 			message.reply(replyBack);
 			
 			// Tailoring a lengthy, but very precise and powerful bash command.
-			const shellCommand = `rg -i ${message.member['user']['id']} -l ../timelog/ | grep ".*\.csv$"`;
+			const shellCommand = `rg -i ${message.member['user']['id']} -l timelog/ | grep ".*\.csv$"`;
 
 			/* 
 				Explanation: First use ripgrep (rg) to recursively search '../timelog/'

@@ -1,6 +1,6 @@
 const Discord = require('discord.js');      // Import module
 const fs = require('fs');                   // File system module
-const userLog = require('./include/json_logging.js');
+const userLog = require('./include/csv_logging.js');
 require('dotenv').config()                  // To use .env files
 
 
@@ -37,7 +37,7 @@ client.on('ready', () => {
 
 
 // Gathering the commands from the files in "commands" directory.
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./src/commands/').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);

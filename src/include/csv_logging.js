@@ -25,7 +25,7 @@ function fileWriteLog(receivedUserArray) {
 	let todayDate = dateInfo[0],
 		todayTime = dateInfo[1];
 
-	let todayFile = '../timelog/'+ todayDate + '.csv';
+	let todayFile = 'timelog/'+ todayDate + '.csv';
 
 	if (receivedUserArray.length === 0) { 
 		console.log("Voice channels empty. Nothing logged.");

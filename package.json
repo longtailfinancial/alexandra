@@ -4,6 +4,7 @@
   "description": "A discord bot for LTF",
   "main": "bot.js",
   "scripts": {
+    "start": "node src/bot.js",
     "test": "jest"
   },
   "author": "",
