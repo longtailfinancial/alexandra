@@ -1,14 +1,18 @@
 <div align="center">
-<h1>
-  Alexandra
-
-</h1>
+<h1>Alexandra</h1>
 </div>
 
-![](https://github.com/JohannSuarez/alexandra/actions/workflows/node.js.yml/badge.svg) 
+<div align="center">
+
+<img alt="Node Tests" src="https://github.com/JohannSuarez/alexandra/actions/workflows/node.js.yml/badge.svg">
+
+<img alt="Node Tests" src="https://img.shields.io/github/languages/count/JohannSuarez/alexandra?label=Languages">
+
+<img alt="Node Tests" src="https://img.shields.io/github/repo-size/JohannSuarez/alexandra?label=Repo%20Size">
+</div>
 
 
-A package for bots to track user presence in Discord voice channels, named after our own bot who was made for this purpose. 
+A package Discord for bots to track user presence in Discord voice channels, named after our own bot who was made for this purpose. 
 
 
 
