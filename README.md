@@ -19,7 +19,7 @@ A package Discord for bots to track user presence in Discord voice channels, nam
 ## Installation ( In-Progress )
 
 
-### install.sh
+### install.py
 
 The app will come with an installation
 shell script that checks for all required 
