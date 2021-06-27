@@ -6,9 +6,10 @@ const util = require('util');
 	To-do: June 2, 2021
 
 	- Refine regex on function grepper.
-		Current issue: Partial names return results. It should be co,plete names.
+		Current issue: Partial names return results. It should be complete names.
 
 	
+	(I think this is fixed. Needs further testing.)
 	- Proper sort of dates.
 		Oh you know what this issue looks like.
 
@@ -140,6 +141,11 @@ async function rgCallback(error, stdout, stderr, message, channelName) {
 	console.log("Loop finished");
 
 	if(lineAggregate.length != 0) {
+		/* 
+			Final reply is here though
+			we need a smarter way to sort the dates.
+			(Take into account month as well, not just day numbers/)
+		*/
 		message.reply(`\n${lineAggregate.sort()}`);
 	} else {
 		message.reply("No results.");
