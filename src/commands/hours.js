@@ -202,7 +202,9 @@ async function rgCallback(error, stdout, stderr, message, channelName) {
 			sortedStringReply.push(element.wholeString);
 		});
 
-		message.reply(`\n${sortedStringReply}`);
+		// The .join("") part is to separate the array items
+		// with just a white space instead of ugly commas.
+		message.reply(`\n${sortedStringReply.join("")}`);
 
 
 	} else {
