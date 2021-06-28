@@ -123,7 +123,8 @@ async function rgCallback(error, stdout, stderr, message, channelName) {
 		*/
 		if(hours == 0) {
 
-			console.log("Nothing found in this file!");
+			// console.log("Nothing found in this file!");
+			
 
 		} else {
 
@@ -132,7 +133,7 @@ async function rgCallback(error, stdout, stderr, message, channelName) {
 				only then should it be mentioned
 			*/
 			let file_name = path.parse(item).base.replace('.csv', '').replace(/_/g, '-');
-			lineAggregate.push(`Date: ${file_name}, Entries: ${counts} Hours: ${hours}\n`);
+			lineAggregate.push(`Date: ${file_name}, Hours: ${hours}\n`);
 
 		}
 
@@ -141,12 +142,69 @@ async function rgCallback(error, stdout, stderr, message, channelName) {
 	console.log("Loop finished");
 
 	if(lineAggregate.length != 0) {
+
 		/* 
 			Final reply is here though
 			we need a smarter way to sort the dates.
 			(Take into account month as well, not just day numbers/)
+
+			From the console log, we know that line aggregate
+			is just an array of strings.
+
+			Make a regex to grab the date parts. [DONE]
+			Regex here: \d{1,2}-\d{1,2}-\d{4}
+
+			Make an unsorted array of objects,
+				key are whole individual date strings, value is date that is grabbed by regex.
+				make sure the grabbed date values are turned into actual date objects.
+
+			Use the sort line.
+			then reply just the keys (Strings of date, and hours).
+
 		*/
-		message.reply(`\n${lineAggregate.sort()}`);
+
+		let unsortedDateArray = [];
+		let sortedStringReply = [];
+
+		lineAggregate.forEach(item => {
+			
+			// This regex grabs date formats from strings.
+			let match = item.match(/\d{1,2}-\d{1,2}-\d{4}/);
+
+
+			// ----------- Start of Snippet ---------------
+			// This is to adjust the format from dd-mm-yyyy to mm-dd-yyyy
+			/* Snippet from 
+				https://stackoverflow.com/questions/33299687/how-to-convert-dd-mm-yyyy-string-into-javascript-date-object
+			*/
+			var dateString = match[0]; 
+			var dateParts = dateString.split("-");
+			var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+
+			// console.log(dateObject);
+
+			// ----------- End of Snippet -----------------
+
+			let object = { 
+				wholeString: item,
+				date: dateObject,
+			}
+
+			unsortedDateArray.push(object);
+
+			}
+
+		);
+
+		const sortedDateArray = unsortedDateArray.sort((a, b) => -(b.date - a.date)); // Descending
+
+		sortedDateArray.forEach(element => {
+			sortedStringReply.push(element.wholeString);
+		});
+
+		message.reply(`\n${sortedStringReply}`);
+
+
 	} else {
 		message.reply("No results.");
 	}
