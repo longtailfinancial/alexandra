@@ -4,3 +4,5 @@ Dockerfile
 src/.env
 .dockerignore
 timelog/*
+.ipynb_checkpoints/
+utilities/outputs/
