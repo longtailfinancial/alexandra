@@ -5,6 +5,8 @@
 <div align="center">
 
 <img alt="Node Tests" src="https://github.com/JohannSuarez/alexandra/actions/workflows/node.js.yml/badge.svg">
+<img alt="super-linter" src="https://github.com/JohannSuarez/alexandra/actions/workflows/linter.yml/badge.svg">
+
 
 <img alt="Node Tests" src="https://img.shields.io/github/languages/count/JohannSuarez/alexandra?label=Languages">
 
