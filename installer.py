@@ -4,7 +4,7 @@
 #------------------=| Dev notes |------------------#
 
 
-# TO DO: 
+# TO DO:
 
 # First determine what distro the user has, fortunately
 # we already have this code from a previous project
@@ -12,36 +12,31 @@
 # Alexandra currently needs ripgrep, python3, nodejs, and npm
 
 # Post installation checks:
-  
-# The .env file in the src directory, 
+
+# The .env file in the src directory,
 #   Remind user of the required bottoken
-#  
+#
 # The admin_list.txt for the planned admin only commands.
-# 
+#
 # Run npm test after everything
 #
 #
 
 #---------------=| End of Dev notes |=-------------#
 
-def distro_unrecognized ():
+def distro_unrecognized():
 
-    # A custom error message if the distro 
+    # A custom error message if the distro
     # remains unrecognized during installations.
     print("Error: Distro unrecognized.")
     print("Please install everything manually.")
 
 
-
-
-
-
-def distr_determine ():
+def distr_determine():
 
     # Detects whether user has Manjaro or Ubuntu
     # The ubuntu check has additional lsb_release parameters
     # to shut the "No LSB modules" warning the hell up.
-
     '''
     if( lsb_release -ar 2>/dev/null | grep --silent 'Ubuntu\|Mint\|Pop' > /dev/null);
     then
@@ -56,15 +51,9 @@ def distr_determine ():
     pass
 
 
-
-
-def check_dist ():
-
-    print("Fucking pussy!")
-
+def check_dist():
 
     # dr=$(distr_determine) # dr stands for distro result.
-
     '''
     if [ "${dr}" == 1 ]     #If Ubuntu, this would be the command
     then
@@ -80,14 +69,11 @@ def check_dist ():
     '''
 
 
-
-
-
-
-def install ():
+def install():
     # Parameters: (debian or arch)
 
     # A switch statement. Inside each case there is an if statement
     # to have separate installation commands for ubuntu and manjaro
 
     pass
+
