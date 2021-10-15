@@ -6,3 +6,5 @@ src/.env
 .dockerignore
 timelog/*
 .env
+.ipynb_checkpoints/
+utilities/outputs/
