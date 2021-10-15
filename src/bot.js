@@ -24,13 +24,13 @@ client.login(process.env.BOTTOKEN);
 // Whenever the bot is activated.
 client.on('ready', () => {
 
-    console.log("Alexandra_ initialized.");
+  console.log("Alexandra_ initialized.");
 
-	setInterval(() => {
+  setInterval(() => {
 
-		userLog.logVoiceChannels(client.channels);
+    userLog.logVoiceChannels(client.channels);
 
-	}, 60000); // 60 seconds
+  }, 60000); // 60 seconds
 
 });
 
@@ -40,32 +40,32 @@ client.on('ready', () => {
 const commandFiles = fs.readdirSync('./src/commands/').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	// set a new item in the Collection
-	// with the key as the command name and the value as the exported module
-	client.commands.set(command.name, command);
+  const command = require(`./commands/${file}`);
+  // set a new item in the Collection
+  // with the key as the command name and the value as the exported module
+  client.commands.set(command.name, command);
 }
 
 // This event manages message input in the server
 // It's mainly to screen them for possible bot commands
 client.on('message', message => {
-    console.log(message.content);
+  console.log(message.content);
 
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+  if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
-	const commandName = args.shift().toLowerCase();
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const commandName = args.shift().toLowerCase();
 
-	if (!client.commands.has(commandName)) return;
+  if (!client.commands.has(commandName)) return;
 
-    const command = client.commands.get(commandName);
+  const command = client.commands.get(commandName);
 
-	try {
-        command.execute(message, args);
-	} catch (error) {
-		console.error(error);
-		message.reply('There was an error trying to execute that command!');
-	}
+  try {
+    command.execute(message, args);
+  } catch (error) {
+    console.error(error);
+    message.reply('There was an error trying to execute that command!');
+  }
 });
 
 
@@ -73,32 +73,32 @@ client.on('message', message => {
 //-------=| Section For Important Code Snippets |=-----------//
 
 /*
-	This is how you grab a channel by ID.
-	Leave this for now, might need it for reference.
+  This is how you grab a channel by ID.
+  Leave this for now, might need it for reference.
 
-	const chan_stratton = client.channels.cache.get("841115556500602900");
+  const chan_stratton = client.channels.cache.get("841115556500602900");
 
-	For voice state updates. Useful for detecting entry to voice servers.
-	Save this for now, we might need this for reference.
-	Ref:
-		https://stackoverflow.com/questions/65961002/discord-js-check-if-user-is-in-an-specific-voice-channel
-
-
-	client.on('voiceStateUpdate', (oldState, newState) => {
-		try {
-
-		//console.log(`User ID: ${newState.member['user']['id']}`);
-		//console.log(`Voice Channel ID: ${newState.channel['id']}`); // Confirmed!
-
-		} catch (error) {
-			console.log("A user has left a channel.");
-
-		}
-	}
-	console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
+  For voice state updates. Useful for detecting entry to voice servers.
+  Save this for now, we might need this for reference.
+  Ref:
+    https://stackoverflow.com/questions/65961002/discord-js-check-if-user-is-in-an-specific-voice-channel
 
 
-	// Why is nobody doing it this, way? It's better!
-	// This is proper stderr logging.
-	console.error(err);
+  client.on('voiceStateUpdate', (oldState, newState) => {
+    try {
+
+    //console.log(`User ID: ${newState.member['user']['id']}`);
+    //console.log(`Voice Channel ID: ${newState.channel['id']}`); // Confirmed!
+
+    } catch (error) {
+      console.log("A user has left a channel.");
+
+    }
+  }
+  console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
+
+
+  // Why is nobody doing it this, way? It's better!
+  // This is proper stderr logging.
+  console.error(err);
 */

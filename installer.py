@@ -69,6 +69,13 @@ def check_dist():
     '''
 
 
+def crontasks():
+
+    # Alexandra will add two cron jobs for the host machine
+    # An hourly backup of the logs
+    # Check if bot.js is active every ten minutes, else run alex
+
+
 def install():
     # Parameters: (debian or arch)
 
@@ -76,4 +83,3 @@ def install():
     # to have separate installation commands for ubuntu and manjaro
 
     pass
-
