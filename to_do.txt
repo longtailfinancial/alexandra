@@ -1,0 +1,39 @@
+-- Nov 8, 2021 --
+Remove pycode directory in source. There is simply no need for it.
+
+
+Change the command prefix from ! to something else, maybe a pound key?
+Some bot keeps tagging the commands with an x emoji.
+
+Before thinking about the API schema, aggregate all data and think about the 
+the possible JSON schema we'll need to collect them
+
+{
+  "id": "234324234",
+  "aliases": [
+    "alias_a",
+    "alias_b"
+  ],
+  "log": {
+    "2020": {
+      "july": {
+        "1": {
+          "channel1": "63",
+          "channel2": "43"
+        },
+        "2": {
+          "channel3": "20"
+        }
+      },
+      "august": {
+        "29": {
+          "some_voice_channel": "80",
+          "some_voice_channel2": "80"
+        }
+      }
+    }
+  }
+}
+
+
+Change timezone to adhere to ISO 8601 ( Include timezone because we're an international organization )
