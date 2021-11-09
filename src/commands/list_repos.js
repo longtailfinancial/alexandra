@@ -14,48 +14,48 @@
 
 
 const access_token = "";
-const org_name="";
+const org_name = "";
 
-async function grab_list () {
-    
+async function grab_list() {
 
-    const response = await octokit.request('GET /orgs/{org}/repos', {
-        org: org_name,
-        per_page: 100,
-        
-    })
-    
-    return response;
+
+  const response = await octokit.request('GET /orgs/{org}/repos', {
+    org: org_name,
+    per_page: 100,
+
+  })
+
+  return response;
 }
 
 
 module.exports = {
-	name: 'lrepos',
-	description: 'List all repos within a Github organization',
-	execute(message, args) {
+  name: 'lrepos',
+  description: 'List all repos within a Github organization',
+  execute(message, args) {
 
-        if(!access_token.length) {
-            console.error("No access token.")
-            return;
-        }
+    if (!access_token.length) {
+      console.error("No access token.")
+      return;
+    }
 
-        if(!org_name.length) {
-            console.error("No org name.")
-            return;
-        }
+    if (!org_name.length) {
+      console.error("No org name.")
+      return;
+    }
 
-        let call_result;
+    let call_result;
 
-        grab_list().then(x => {
+    grab_list().then(x => {
 
-            call_result = x;
-            console.log(call_result.data);
-            call_result.data.forEach(element => {
-                console.log(element.name);
-            });
+      call_result = x;
+      console.log(call_result.data);
+      call_result.data.forEach(element => {
+        console.log(element.name);
+      });
 
-        });
+    });
 
 
-	},
+  },
 };

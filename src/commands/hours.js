@@ -1,4 +1,4 @@
-const {exec} = require("child_process");
+const { exec } = require("child_process");
 const path = require('path');
 const util = require('util');
 
@@ -54,7 +54,7 @@ async function grepper(userid, item, channelName) {
       regex stuff.
 
     */
-    const {stdout, stderr} = await execa(`grep ${userid} ${item} | grep ',${channelName}' | wc -l`);
+    const { stdout, stderr } = await execa(`grep ${userid} ${item} | grep ',${channelName}' | wc -l`);
     return stdout;
 
   } catch (stderr) {

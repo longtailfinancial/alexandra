@@ -70,6 +70,7 @@ def check_dist():
 
 
 def crontasks():
+    pass
 
     # Alexandra will add two cron jobs for the host machine
     # An hourly backup of the logs
