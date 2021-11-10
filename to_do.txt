@@ -36,4 +36,10 @@ the possible JSON schema we'll need to collect them
 }
 
 
-Change timezone to adhere to ISO 8601 ( Include timezone because we're an international organization )
+- How to grab all IDs: Get names of all log files, 
+  put in list item. Use generator expression to put each file in memory one by one.
+  Read file, put all IDs in a Python Set (Sets don't allow duplicates)
+
+- Change timezone to adhere to ISO 8601 
+  ( Include timezone because we're an international organization )
+
