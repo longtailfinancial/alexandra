@@ -1,7 +1,6 @@
 -- Nov 8, 2021 --
 Remove pycode directory in source. There is simply no need for it.
 
-
 Change the command prefix from ! to something else, maybe a pound key?
 Some bot keeps tagging the commands with an x emoji.
 
@@ -42,4 +41,5 @@ the possible JSON schema we'll need to collect them
 
 - Change timezone to adhere to ISO 8601 
   ( Include timezone because we're an international organization )
+
 
