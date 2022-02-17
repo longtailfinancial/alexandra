@@ -3,6 +3,8 @@ const fs = require('fs');                   // File system module
 const userLog = require('./include/csv_logging.js');
 require('dotenv').config()                  // To use .env files
 
+// The bot needs to subscribe to intents to listen to events such as a user joining.
+const intents = ["GUILDS", "GUILD_MEMBERS"];
 
 const prefix = "!";                         // Every command starts with "!"
 
@@ -10,7 +12,7 @@ const prefix = "!";                         // Every command starts with "!"
     Client object that connects to the API itself
     to run the bot
 */
-const client = new Discord.Client();
+const client = new Discord.Client({intents: intents, ws:{intents: intents}});
 
 /*
     Collections are an extension of JavaScript's native
@@ -19,6 +21,15 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.login(process.env.BOTTOKEN);
 
+// When someone joins
+client.on('guildMemberAdd', member => {
+  console.log("Someone joined")
+  /*
+  client.channels.cache.get('682388820972536045').send("Life's but a walking shadow. A poor player that struts and frets his hour upon the stage, and then is heard no more.");
+  */
+    member.guild.channels.cache.get('682388820972536045').send(`${member} Out, out! Brief candle!`); 
+
+});
 
 
 // Whenever the bot is activated.
@@ -64,7 +75,9 @@ client.on('message', message => {
     command.execute(message, args);
   } catch (error) {
     console.error(error);
+
     message.reply('There was an error trying to execute that command!');
+
   }
 });
 
