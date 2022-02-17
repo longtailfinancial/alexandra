@@ -1,117 +1,17 @@
-const Discord = require('discord.js');      // Import module
-const fs = require('fs');                   // File system module
-const userLog = require('./include/csv_logging.js');
-require('dotenv').config()                  // To use .env files
+// doc src: https://discordjs.guide/creating-your-bot/creating-commands.html#command-deployment-script
+// Require the necessary discord.js classes
 
-// The bot needs to subscribe to intents to listen to events such as a user joining.
-const intents = ["GUILDS", "GUILD_MEMBERS"];
+const { Client, Intents } = require('discord.js');
+const { token } = require('../config.json');
 
-const prefix = "!";                         // Every command starts with "!"
-
-/*
-    Client object that connects to the API itself
-    to run the bot
-*/
-const client = new Discord.Client({intents: intents, ws:{intents: intents}});
-
-/*
-    Collections are an extension of JavaScript's native
-    map class.
-*/
-client.commands = new Discord.Collection();
-client.login(process.env.BOTTOKEN);
-
-// When someone joins
-client.on('guildMemberAdd', member => {
-  console.log("Someone joined")
-  /*
-  client.channels.cache.get('682388820972536045').send("Life's but a walking shadow. A poor player that struts and frets his hour upon the stage, and then is heard no more.");
-  */
-    member.guild.channels.cache.get('682388820972536045').send(`${member} Out, out! Brief candle!`); 
-
-});
+// Create a new client instance
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 
-// Whenever the bot is activated.
-client.on('ready', () => {
+// When the client is ready, run this code (only once)
+client.once('ready', () => {
+	console.log('Ready!');
+})
 
-  console.log("Alexandra_ initialized.");
-
-  setInterval(() => {
-
-    userLog.logVoiceChannels(client.channels);
-
-  }, 60000); // 60 seconds
-
-});
-
-
-
-// Gathering the commands from the files in "commands" directory.
-const commandFiles = fs.readdirSync('./src/commands/').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  // set a new item in the Collection
-  // with the key as the command name and the value as the exported module
-  client.commands.set(command.name, command);
-}
-
-// This event manages message input in the server
-// It's mainly to screen them for possible bot commands
-client.on('message', message => {
-  console.log(message.content);
-
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
-
-  if (!client.commands.has(commandName)) return;
-
-  const command = client.commands.get(commandName);
-
-  try {
-    command.execute(message, args);
-  } catch (error) {
-    console.error(error);
-
-    message.reply('There was an error trying to execute that command!');
-
-  }
-});
-
-
-
-//-------=| Section For Important Code Snippets |=-----------//
-
-/*
-  This is how you grab a channel by ID.
-  Leave this for now, might need it for reference.
-
-  const chan_stratton = client.channels.cache.get("841115556500602900");
-
-  For voice state updates. Useful for detecting entry to voice servers.
-  Save this for now, we might need this for reference.
-  Ref:
-    https://stackoverflow.com/questions/65961002/discord-js-check-if-user-is-in-an-specific-voice-channel
-
-
-  client.on('voiceStateUpdate', (oldState, newState) => {
-    try {
-
-    //console.log(`User ID: ${newState.member['user']['id']}`);
-    //console.log(`Voice Channel ID: ${newState.channel['id']}`); // Confirmed!
-
-    } catch (error) {
-      console.log("A user has left a channel.");
-
-    }
-  }
-  console.log(client.users.cache);  <---- Important: List of all users in the server (online). Tested in voiceStateUpdate event.
-
-
-  // Why is nobody doing it this, way? It's better!
-  // This is proper stderr logging.
-  console.error(err);
-*/
+// Login to Discord with client token.
+client.login(token);
