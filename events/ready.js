@@ -8,8 +8,8 @@ module.exports = {
 		setInterval(() => {
 
 			userLog.logVoiceChannels(client.channels);
-			console.log(client.channels.cache)
+			console.log(client.channels)
 
-		}, 5000); // 5 seconds
+		}, 60000); // 5 seconds
 	}
 }

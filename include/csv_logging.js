@@ -35,10 +35,7 @@ function fileWriteLog(receivedUserArray) {
 	}
 
 	fs.access(todayFile, (err) => {
-
-		if(err) {
-
-			console.log(`CSV for today's file: ${todayDate}.json doesn't exist. Creating...`);
+if(err) { console.log(`CSV for today's file: ${todayDate}.json doesn't exist. Creating...`);
 
 			const csvWriter = createCsvWriter({
 				path: todayFile,
@@ -77,7 +74,7 @@ function logVoiceChannels(clientChannelsObj) {
 	// Then listing the current users in each of them.
 
 	// Filters all the channels available for voice type channnels
-	const voiceChannelCount = clientChannelsObj.cache.filter(c => c.type ==='voice');
+	const voiceChannelCount = clientChannelsObj.cache.filter(c => c.type ==='GUILD_VOICE');
 
 	//	Empty string, we gradually fill this with data.
 	let logString = "";
@@ -115,7 +112,7 @@ function logVoiceChannels(clientChannelsObj) {
 				const userName = item[1].user.username;
 				const userID = item[1].user.id;
 
-				console.log('Username: ' + chalk.greenBright(userName) + '  ID: ' + chalk.blueBright(userID));
+				// console.log('Username: ' + chalk.greenBright(userName) + '  ID: ' + chalk.blueBright(userID));
 				logString += '     ' + 'Username: '+ userName + '  ID: ' + userID + '\n\n';
 
 				// user object is created. Has Time, Username, UserID, and Channel Name
