@@ -1,8 +1,6 @@
 /*
- * Update: Feb. 17, 2022
  * Currently re-learning everything. Stopped at:
- * https://discordjs.guide/creating-your-bot/creating-commands.html#user-info-command
- *
+ * https://discordjs.guide/creating-your-bot/event-handling.html#individual-event-files
  * Server now has registered commands and is replying properly.
  */
 
@@ -14,10 +12,12 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, 'GUILDS', 'GUILD_MEMBERS'] });
 
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('js'));
+
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`)
@@ -27,11 +27,6 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-// When the client is ready, run this code (only once)
-
-client.once('ready', () => {
-	console.log('Ready!');
-});
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
@@ -44,10 +39,21 @@ client.on('interactionCreate', async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command' })
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
-
 });
+
+
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
+
+
 
 
 // Login to Discord with your client's token
