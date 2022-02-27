@@ -7,6 +7,7 @@ src/.env
 timelog/*
 .env
 config.json
+*config.json
 .ipynb_checkpoints/
 utilities/outputs/
 data
