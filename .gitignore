@@ -9,3 +9,5 @@ timelog/*
 config.json
 .ipynb_checkpoints/
 utilities/outputs/
+data
+data/

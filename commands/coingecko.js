@@ -6,7 +6,6 @@ const axios = require('axios');
 // It has ticker symbols of all Coingecko listed tokens.
 const fs = require('fs');
 let rawdata = fs.readFileSync('data/crypto_data.json')
-let token_info = JSON.parse(rawdata);
 
 // Provided symbol will be given by discord user
 let currency = 'usd'
@@ -27,6 +26,7 @@ function get_token_id(ticker) {
 
 async function get_token_price(ticker) {
 
+
   let token_id = get_token_id(ticker);
   let http_string = `https://api.coingecko.com/api/v3/simple/price?ids=${token_id}&vs_currencies=${currency}`;
 
@@ -34,8 +34,8 @@ async function get_token_price(ticker) {
   await axios.get(http_string)
     .then(res => {
       let headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
-      //console.log('Status Code:', res.status);
-      //console.log('Date in Response header:', headerDate);
+      console.log('Status Code:', res.status);
+      console.log('Date in Response header:', headerDate);
 
       token_data = res.data;
 
@@ -50,22 +50,21 @@ async function get_token_price(ticker) {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('price')
-    .setDescription('Check crypto price by ticker symbol.'),
-  execute(message, args) {
+    .setDescription('Check crypto price by ticker symbol.')
+    .addStringOption(option =>
+      option.setName('ticker')
+        .setDescription("The cryptocurrency's ticker symbol [eth, btc, cro, etc..]")
+        .setRequired(true)),
+  async execute(interaction) {
 
-    if (args.length != 1) {
-      message.reply("Format: !price [Token ticker symbol]");
-      return 0;
-    }
 
-    let input_string = args[0].toLowerCase();
+    let input_string = interaction.options.getString("ticker");
 
     get_token_price(input_string).then((res) => {
 
       if (Object.keys(res).length === 0) {
         let reply = "Could not retrieve token data."
         console.log(reply);
-        message.reply(reply);
         return 0;
       }
 
@@ -76,8 +75,19 @@ module.exports = {
       let token_price = Object.values(Object.values(res)[0]).toString();
       let token_info = `Current price of ${token_name} token is: $${token_price} USD.`;
 
-      message.reply(token_info);
+
+      interaction.reply({
+        content: token_info,
+        ephemeral: true,
+      });
 
     })
+
+    /*
+    interaction.reply({
+      content: interaction.options.getString("ticker"),
+      ephemeral: true,
+    });
+    */
   }
 };
