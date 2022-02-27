@@ -10,6 +10,6 @@ module.exports = {
 			userLog.logVoiceChannels(client.channels);
 			console.log(client.channels)
 
-		}, 600000); // 600 seconds
+		}, 60000); // 600 seconds
 	}
 }
