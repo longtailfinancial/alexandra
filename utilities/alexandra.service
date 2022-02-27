@@ -7,7 +7,7 @@ Type=forking
 # Fill this out before moving this file to /etc/systemd/system
 # Don't forget to enable using "systemctl enable alexandra"
 
-# ExecStart = [ ABSOLUTE_PATH_TO_PROJECT/utilities.run.sh ]
+# ExecStart = [ ABSOLUTE_PATH_TO_PROJECT/utilities/run.sh ]
 # RuntimeDirectory = [ ABSOLUTE_PATH_TO_PROJECT_ROOT ]
 
 
