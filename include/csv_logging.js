@@ -102,6 +102,7 @@ function logVoiceChannels(clientChannelsObj) {
 		try {
 
 			const guildMemberHolder = vchannelHolder.members;
+			console.log(guildMemberHolder)
 
 			// guildMemberHolder is a dictionary, so we can iterate through it.
 			const iter1 = guildMemberHolder[Symbol.iterator]();
